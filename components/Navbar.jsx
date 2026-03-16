@@ -1,4 +1,7 @@
 "use client";
+import { createClient } from "@/utils/supabase/client";
+import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { FaChartBar } from "react-icons/fa";
 
@@ -6,13 +9,16 @@ function initials(name = "") {
   return name
     .split(" ")
     .slice(0, 2)
-    .map(w => w[0]?.toUpperCase() ?? "")
+    .map((w) => w[0]?.toUpperCase() ?? "")
     .join("");
 }
 
 export default function Navbar({ user }) {
   const [wsMenu, setWsMenu] = useState(false);
   const [trialDismissed, setTrialDismissed] = useState(false);
+  const supabase = createClient()
+
+
   return (
     <div className="bg-neutral-50 sticky top-0 z-30">
       {!trialDismissed && (
@@ -35,34 +41,28 @@ export default function Navbar({ user }) {
           </button>
         </div>
       )}
-      <div className="max-w-5xl mx-auto px-8 h-14 flex items-center justify-between">
-
+      <div className="max-w-5xl mx-auto px-10 h-14 flex items-center justify-between">
         <button
-          onClick={() => setPage("projects")}
           className="flex items-center gap-2.5 bg-transparent border-none cursor-pointer p-0"
         >
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-400 flex items-center justify-center shadow-sm">
-            <FaChartBar className="text-white text-xs" />
-          </div>
+          <Image src="/icon.png" alt="TwoSeven" width={30} height={30} />
 
-          <span className="text-[15px] font-extrabold text-neutral-800 tracking-tight">
+          <Link href="/dashboard" className="text-[15px] font-extrabold text-neutral-800 tracking-tight">
             TwoSeven
-          </span>
+          </Link>
         </button>
 
         <div className="flex items-center gap-3">
-
-          {/* User Menu */}
           <div className="relative">
             <button
-              onClick={() => setWsMenu(v => !v)}
+              onClick={() => setWsMenu((v) => !v)}
               className={`flex items-center gap-2 pl-1 pr-3 py-1 rounded-xl border transition-all
-              ${wsMenu
+              ${
+                wsMenu
                   ? "border-neutral-300 bg-neutral-50"
                   : "border-neutral-200 bg-white hover:border-neutral-300"
-                }`}
+              }`}
             >
-
               <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-[11px] font-extrabold text-white">
                 {initials(user.name)}
               </div>
@@ -83,7 +83,6 @@ export default function Navbar({ user }) {
 
             {wsMenu && (
               <div className="absolute right-0 top-full mt-2 bg-white border border-neutral-200 rounded-xl shadow-xl overflow-hidden min-w-[190px] z-50">
-
                 <div className="px-4 py-3 border-b border-neutral-100">
                   <div className="text-xs font-bold text-neutral-800">
                     {user.name}
@@ -98,8 +97,8 @@ export default function Navbar({ user }) {
                   "Account Settings",
                   "Billing",
                   "Invite Members",
-                  "Documentation"
-                ].map(item => (
+                  "Documentation",
+                ].map((item) => (
                   <button
                     key={item}
                     onClick={() => setWsMenu(false)}
@@ -111,13 +110,12 @@ export default function Navbar({ user }) {
 
                 <div className="border-t border-neutral-100">
                   <button
-                    onClick={() => setWsMenu(false)}
+                    onClick={() => {setWsMenu(false)}}
                     className="block w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-red-50"
                   >
                     Sign out
                   </button>
                 </div>
-
               </div>
             )}
           </div>

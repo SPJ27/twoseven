@@ -11,15 +11,16 @@ export async function GET(req) {
   if (!id) {
     return Response.json({ success: false, error: "Missing id" }, { status: 400 });
   }
-
+  const {data: tracker, error: trackerError} = await supabase
+    .from("trackers")
+    .select("*")
+    .eq("id", id)
+    .single();
   let visitsQuery = supabase
     .from("visits")
     .select("*")
     .eq("tracker_id", id)
     .order("date", { ascending: false });
-
-  // Fetch users with their visit count + most recent visit metadata
-  // via the user_visits join table
   let usersQuery = supabase
     .from("users")
     .select(`
@@ -176,7 +177,6 @@ export async function GET(req) {
     ? ((bounceSessions / totalSessions) * 100).toFixed(1) + "%"
     : "0.0%";
 
-  // ── Build enriched user rows ─────────────────────────────────────────────
   const enrichedUsers = users.map(u => {
     const userVisits = (u.user_visits ?? [])
       .map(uv => uv.visits)
@@ -222,6 +222,7 @@ export async function GET(req) {
       referrers,
       graph,
       bucketMode,
+      connected: tracker ? tracker.connected : false,
       users: enrichedUsers,
     },
   });

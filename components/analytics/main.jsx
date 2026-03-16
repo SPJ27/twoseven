@@ -31,6 +31,7 @@ import {
   FaPaperclip,
   FaMapMarker,
 } from "react-icons/fa";
+import Link from "next/link";
 
 Chart.register(...registerables);
 
@@ -456,7 +457,8 @@ function CustomRangePicker({ onApply, onCancel, initialFrom, initialTo }) {
   );
 }
 
-function NotConnectedBadge() {
+function NotConnectedBadge({ connected }) {
+  if (connected === true) return null;
   return (
     <div className="fixed bottom-5 bg-yellow-100 left-5 z-50 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-yellow-500 shadow-sm text-xs font-medium text-[#6B6D80] select-none pointer-events-none">
       <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
@@ -957,6 +959,7 @@ export default function AnalyticsComponents({ TRACKER_ID }) {
       const res = await fetch(`${API_BASE}?${params}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
+      console.log(json.data)
       if (!json.success) throw new Error(json.error || "Unknown error");
       setData(json.data);
     } catch (e) {
@@ -1008,8 +1011,8 @@ export default function AnalyticsComponents({ TRACKER_ID }) {
   const rightMax = Math.max(0, ...rightRows.map((r) => r.value));
 
   return (
-    <div className="min-h-screen bg-[#F7F8F9] p-6 font-['Inter',sans-serif]">
-      <div className="max-w-[960px] mx-auto flex flex-col gap-4">
+    <div className="min-h-screen bg-[#F7F8F9] py-6 px-20  font-['Inter',sans-serif]">
+      <div className="max-w-235 mx-auto flex flex-col gap-4">
         <div className="flex items-center gap-2.5 flex-wrap relative">
           <div className="flex items-center gap-2 border border-[#E4E5ED] rounded-[10px] px-3.5 py-1.5 bg-white">
             <span className="text-xs font-mono text-[#06AB78] font-bold">
@@ -1060,15 +1063,14 @@ export default function AnalyticsComponents({ TRACKER_ID }) {
               ↻
             </span>
           </button>
-          <button
-            onClick={() => fetchStats(period)}
-            disabled={loading}
+          <Link
+          href={`/settings/${TRACKER_ID}`}
             className={`w-8 h-8 flex items-center justify-center rounded-[10px] border border-[#E4E5ED] cursor-pointer text-[#6B6D80] bg-white text-base transition-colors hover:border-[#06AB78] hover:text-[#06AB78] ${loading ? "opacity-50" : ""}`}
           >
             <span className={loading ? "inline-block animate-spin" : ""}>
               ⚙
             </span>
-          </button>
+          </Link>
 
           {data?.bucketMode && (
             <span className="text-xs text-[#6B6D80] ml-auto capitalize">
@@ -1175,8 +1177,7 @@ export default function AnalyticsComponents({ TRACKER_ID }) {
 
         {!loading && data && <UsersTable users={data.users ?? []} />}
       </div>
-
-      <NotConnectedBadge />
+      {!loading && data && <NotConnectedBadge connected={data.connected} />}
     </div>
   );
 }

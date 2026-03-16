@@ -507,7 +507,7 @@ function ProjectsPage({
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-8 py-10">
+    <div className="max-w-5xl mx-auto px-10 py-10">
       <div className="flex items-center justify-end mb-8">
         <PrimaryBtn onClick={onAddWebsite}>
           <FaPlus className="text-[10px]" /> Website

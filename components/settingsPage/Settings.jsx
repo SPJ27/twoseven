@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 import {
   FaBell,
@@ -94,7 +95,7 @@ function GeneralPage({ domain, setDomain, domain_, id }) {
   const scriptCode = `<script\n  data-tracker-id="${id}"\n  data-domain="${domain}"\n  strategy="afterInteractive" \n  ${localhost ? `data-allow-localhost="true" \n  data-debug="true" \n  ` : ""}src="https://datafa.st/js/script.js">\n</script>`;
 
   return (
-    <div className="space-y-4 max-w-2xl">
+    <div className="space-y-4 max-w-3xl">
       {/* Snippet card */}
       <div className="border border-neutral-200 rounded-2xl p-6 bg-white">
         {/* Install tabs — each is its own bordered button */}
@@ -165,7 +166,6 @@ function GeneralPage({ domain, setDomain, domain_, id }) {
         </p>
       </div>
 
-      {/* Domain card */}
       <div className="border border-neutral-200 rounded-2xl p-6 bg-white">
         <h3 className="text-base font-bold text-neutral-900 mb-1">Domain</h3>
         <p className="text-sm text-neutral-500 leading-relaxed mb-4">
@@ -187,11 +187,18 @@ function GeneralPage({ domain, setDomain, domain_, id }) {
         <div className="flex justify-end mt-5">
           <button
             onClick={() => {
+              fetch('/api/update', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id, domain }),
+              });
               setSaved(true);
               setTimeout(() => setSaved(false), 2000);
             }}
             disabled={domain === domain_}
-            className={`px-5 py-2 text-sm font-medium  rounded-xl border border-neutral-200 ${domain === domain_ ? "bg-neutral-50 hover:bg-neutral-50 text-neutral-500 cursor-not-allowed" : "bg-neutral-900 text-neutral-200 cursor-pointer hover:bg-neutral-950"} transition-colors flex items-center gap-2`}
+            className={`px-4 py-1.5 text-sm font-medium  rounded-lg border border-neutral-200 ${domain === domain_ ? "bg-neutral-100 text-neutral-500 cursor-not-allowed" : "bg-neutral-800 text-white font-semibold cursor-pointer hover:bg-neutral-900"} transition-colors flex items-center gap-2`}
           >
             {saved && <FaCheck className="text-neutral-500 text-[10px]" />}
             {saved ? "Saved" : "Save"}
@@ -218,9 +225,9 @@ const Settings = ({ id, domain: domain_ }) => {
 
   return (
     <div className="px-50 py-13">
-      <button className="inline-flex items-center gap-1.5 font-semibold text-sm text-neutral-800 hover:text-neutral-800 transition-colors mb-3 border border-neutral-300 bg-white rounded-lg px-2 py-1 shadow-sm">
+      <Link href={`/analytics/${id}`} className="inline-flex items-center gap-1.5 font-semibold text-sm text-neutral-800 hover:text-neutral-800 transition-colors mb-3 border border-neutral-300 bg-white rounded-lg px-2 py-1 shadow-sm">
         ← Back
-      </button>
+      </Link>
 
       <h1 className="text-2xl font-bold text-neutral-800 mb-4 ">
         Settings for {domain}

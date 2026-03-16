@@ -10,7 +10,9 @@ export const metadata = {
 };
 
 const page = async ({ params }) => {
+  
   let { id } = await params;
+  
   const supabase = createClient(await cookies());
   const { data } = await supabase.auth.getUser();
   const user = data?.user;
