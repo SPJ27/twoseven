@@ -24,10 +24,12 @@ export default function LoginPage() {
   }, [])
 
   const signIn = async () => {
-  await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    
-  })
+  supabase.auth.signInWithOAuth({
+  provider: "google",
+  options: {
+    redirectTo: "https://twoseven.sakshamjain.dev/auth/callback",
+  },
+})
 }
 
   return (
