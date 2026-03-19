@@ -92,7 +92,7 @@ function GeneralPage({ domain, setDomain, domain_, id }) {
   const [localhost, setLocalhost] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const scriptCode = `<script\n  data-tracker-id="${id}"\n  data-domain="${domain}"\n  strategy="afterInteractive" \n  ${localhost ? `data-allow-localhost="true" \n  data-debug="true" \n  ` : ""}src="https://twoseven.sakshamjain.dev/script.js">\n</script>`;
+  const scriptCode = `<script\n  data-tracker-id="${id}"\n  data-domain="${domain}"\n  strategy="afterInteractive" \n  ${localhost ? `data-allow-localhost="true" \n  data-debug="true" \n  ` : ""}src="https://twoseven.sakshamjain.dev/tracker.js">\n</script>`;
 
   return (
     <div className="space-y-4 max-w-3xl">
