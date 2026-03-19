@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
         {children}
         <Script
           src="/tracker.js"
-          data-tracker-id="93edf309-7f8f-4066-9bb5-aef26765dffc"
+          data-tracker-id="f53c5ee8-7afd-4cda-8782-4a606b722e7b"
           data-domain="www.cramai"
           strategy="afterInteractive" 
           data-allow-localhost="true"
