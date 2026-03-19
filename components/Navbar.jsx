@@ -92,22 +92,6 @@ export default function Navbar({ user }) {
                     {user.email}
                   </div>
                 </div>
-
-                {[
-                  "Account Settings",
-                  "Billing",
-                  "Invite Members",
-                  "Documentation",
-                ].map((item) => (
-                  <button
-                    key={item}
-                    onClick={() => setWsMenu(false)}
-                    className="block w-full text-left px-4 py-2.5 text-sm text-neutral-600 hover:bg-neutral-50"
-                  >
-                    {item}
-                  </button>
-                ))}
-
                 <div className="border-t border-neutral-100">
                   <Link
                     href={`/logout`}
