@@ -92,7 +92,7 @@ function GeneralPage({ domain, setDomain, domain_, id }) {
   const [localhost, setLocalhost] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const scriptCode = `<script\n  data-tracker-id="${id}"\n  data-domain="${domain}"\n  strategy="afterInteractive" \n  ${localhost ? `data-allow-localhost="true" \n  data-debug="true" \n  ` : ""}src="https://datafa.st/js/script.js">\n</script>`;
+  const scriptCode = `<script\n  data-tracker-id="${id}"\n  data-domain="${domain}"\n  strategy="afterInteractive" \n  ${localhost ? `data-allow-localhost="true" \n  data-debug="true" \n  ` : ""}src="https://twoseven.sakshamjain.dev/script.js">\n</script>`;
 
   return (
     <div className="space-y-4 max-w-3xl">
@@ -179,7 +179,7 @@ function GeneralPage({ domain, setDomain, domain_, id }) {
           placeholder="yourdomain.com"
         />
         <p className="mt-2 text-xs text-neutral-400">
-          Your public DataFast ID is{" "}
+          Your public TwoSeven ID is{" "}
           <span className="font-mono font-medium text-neutral-500">
             dfid_hJKIQ22rKEtoo2AVlNSHn
           </span>
