@@ -61,7 +61,7 @@ export async function GET(req) {
     .select("id, domain, connected, created_at")
     .eq("creator", email)
     .order("created_at", { ascending: false });
-
+  console.log("Fetched trackers:", trackers, "Error:", trackersError);
   const { data: adminTrackers, error: trackerError } = await supabase
     .from("admins")
     .select("id, user_id, tracker_id")
@@ -164,7 +164,7 @@ export async function POST(req) {
       { status: 500 },
     );
   }
-
+  console.log("Created tracker:", tracker);
   return Response.json(
     {
       success: true,
