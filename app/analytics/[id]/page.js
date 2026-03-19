@@ -12,7 +12,7 @@ const page = async ({params}) => {
   return (
     <div>
       <Navbar user={user}/>
-        <AnalyticsComponents TRACKER_ID={id}/>
+        <AnalyticsComponents TRACKER_ID={id} user_email={user?.email} />
     </div>
   )
 }

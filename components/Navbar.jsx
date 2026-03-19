@@ -41,7 +41,7 @@ export default function Navbar({ user }) {
           </button>
         </div>
       )}
-      <div className="max-w-5xl mx-auto px-10 h-14 flex items-center justify-between">
+      <div className="max-w-5xl mx-auto  h-14 flex items-center justify-between">
         <button
           className="flex items-center gap-2.5 bg-transparent border-none cursor-pointer p-0"
         >
@@ -67,7 +67,7 @@ export default function Navbar({ user }) {
                 {initials(user.name)}
               </div>
 
-              <span className="text-sm font-semibold text-neutral-700">
+              <span className="text-xs font-semibold text-neutral-700">
                 {user.name}
               </span>
 
@@ -109,12 +109,12 @@ export default function Navbar({ user }) {
                 ))}
 
                 <div className="border-t border-neutral-100">
-                  <button
-                    onClick={() => {setWsMenu(false)}}
+                  <Link
+                    href={`/logout`}
                     className="block w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-red-50"
                   >
                     Sign out
-                  </button>
+                  </Link>
                 </div>
               </div>
             )}

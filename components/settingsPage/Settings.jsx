@@ -195,6 +195,7 @@ function GeneralPage({ domain, setDomain, domain_, id }) {
                 body: JSON.stringify({ id, domain }),
               });
               setSaved(true);
+              domain_ = domain;
               setTimeout(() => setSaved(false), 2000);
             }}
             disabled={domain === domain_}

@@ -4,6 +4,12 @@ import { cookies } from "next/headers";
 export async function GET(req) {
   const supabase = createClient(await cookies());
 
+  const currentUser = await supabase.auth.getUser();
+  if (!currentUser.data.user) {
+    return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  }
+  const email = currentUser.data.user.email;
+
   const id       = req.nextUrl.searchParams.get("id");
   const fromDate = req.nextUrl.searchParams.get("fromDate");
   const toDate   = req.nextUrl.searchParams.get("toDate");
@@ -29,6 +35,7 @@ export async function GET(req) {
       name,
       email,
       date_created,
+      admin,
       user_visits (
         visit_id,
         visits (
@@ -43,6 +50,22 @@ export async function GET(req) {
     `)
     .eq("tracker_id", id)
     .order("date_created", { ascending: false });
+
+    console.log("Tracker:", tracker, "Error:", trackerError);
+  
+    const {data: isAdmin, error: adminError} = await supabase
+    .from("admins")
+    .select("*")
+    .eq("tracker_id", id)
+    .eq("user_id", email)
+    .single();
+
+  if ( !isAdmin && tracker.creator !== email) {
+    
+    console.error("Tracker error:", trackerError);
+    console.error("Admin error:", adminError);
+    return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  }
 
   if (fromDate) {
     const from = new Date(fromDate).toISOString();
@@ -187,13 +210,14 @@ export async function GET(req) {
       if (!latest) return v;
       return new Date(v.start_time) > new Date(latest.start_time) ? v : latest;
     }, null);
-
+    console.log("User:", u.admin);
     return {
       id:           u.id,
       userId:       u.user_id,
       name:         u.name  ?? null,
       email:        u.email ?? null,
       dateCreated:  u.date_created,
+      admin:       u.admin ?? false,
       visits:       userVisits.length,
       lastSeen:     latestVisit?.start_time ?? u.date_created,
       country:      latestVisit?.country    ?? null,
@@ -222,7 +246,9 @@ export async function GET(req) {
       referrers,
       graph,
       bucketMode,
+      creator: tracker ? tracker.creator : null,
       connected: tracker ? tracker.connected : false,
+      domain: tracker ? tracker.domain : null,
       users: enrichedUsers,
     },
   });

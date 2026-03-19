@@ -43,7 +43,7 @@ function PrimaryBtn({ children, onClick, sm, disabled }) {
       disabled={disabled}
       className={`inline-flex items-center gap-2 font-semibold rounded-xl bg-neutral-800 text-white
         hover:bg-neutral-900 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed
-        ${sm ? "text-xs px-3 py-1.5" : "text-sm px-4 py-2"}`}
+        ${sm ? "text-xs px-1 py-1.5" : "text-sm px-4 py-1.5"}`}
     >
       {children}
     </button>
@@ -277,7 +277,7 @@ function NewProjectModal({ onClose, onCreate, loading }) {
 
 function SnippetModal({ project, onClose }) {
   const [copied, copy] = useCopy();
-  const snippet = `<script\n  src="https://cdn.trackify.dev/tracker.js"\n  data-tracker-id="${project.id}"\n  data-domain="${project.domain}"\n  defer\n></script>`;
+  const snippet = `<script\n  data-tracker-id="${project.id}"\n  data-domain="${project.domain}"\n  strategy="afterInteractive" \n  src="https://datafa.st/js/script.js">\n</script>`;
   return (
     <ModalWrap onClose={onClose} width={520}>
       <div className="p-7">
@@ -372,7 +372,7 @@ function ProjectCard({ project, onDelete, onSnippet }) {
         setMenu(false);
       }}
       className={`bg-white rounded-2xl border transition-all duration-200 overflow-hidden cursor-pointer relative
-        ${hover ? "border-neutral-300 shadow-lg shadow-neutral-200/60" : "border-neutral-200 shadow-sm shadow-neutral-100/40"}`}
+        ${hover ? "border-neutral-100 shadow-lg shadow-neutral-200" : "border-gray-200/90 border-[0.5px] shadow-xl shadow-neutral-200/60"}`}
     >
       <div className="flex items-center justify-between px-5 pt-5 pb-3">
         <div className="flex items-center gap-2.5 min-w-0">
@@ -392,50 +392,6 @@ function ProjectCard({ project, onDelete, onSnippet }) {
           className="relative flex-shrink-0 ml-2"
           onClick={(e) => e.stopPropagation()}
         >
-          <button
-            onClick={() => setMenu((v) => !v)}
-            className={`w-7 h-7 rounded-lg flex items-center justify-center text-sm
-              transition-all bg-transparent border-none cursor-pointer
-              ${menu ? "bg-neutral-100 text-neutral-600" : `text-neutral-300 hover:text-neutral-500 hover:bg-neutral-50 ${hover ? "opacity-100" : "opacity-0"}`}`}
-          >
-            ⋯
-          </button>
-          {menu && (
-            <div
-              className="absolute right-0 top-full mt-1 z-20 bg-white border border-neutral-200
-              rounded-xl shadow-xl overflow-hidden min-w-[148px]"
-            >
-              <button
-                onClick={() => setMenu(false)}
-                className="flex items-center gap-2 w-full text-left px-3.5 py-2.5 text-sm text-neutral-600
-                  hover:bg-neutral-50 bg-transparent border-none cursor-pointer"
-              >
-                <FaChartBar className="text-[10px] text-neutral-400" />{" "}
-                Analytics
-              </button>
-              <button
-                onClick={() => {
-                  setMenu(false);
-                  onSnippet(project);
-                }}
-                className="flex items-center gap-2 w-full text-left px-3.5 py-2.5 text-sm text-neutral-600
-                  hover:bg-neutral-50 bg-transparent border-none cursor-pointer"
-              >
-                <FaCode className="text-[10px] text-neutral-400" /> Get snippet
-              </button>
-              <div className="h-px bg-neutral-100" />
-              <button
-                onClick={() => {
-                  setMenu(false);
-                  onDelete(project);
-                }}
-                className="flex items-center gap-2 w-full text-left px-3.5 py-2.5 text-sm text-red-500
-                  hover:bg-red-50 bg-transparent border-none cursor-pointer"
-              >
-                <FaTrash className="text-[10px]" /> Remove
-              </button>
-            </div>
-          )}
         </div>
       </div>
       <div className="px-2">
@@ -507,7 +463,7 @@ function ProjectsPage({
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-10 py-10">
+    <div className="max-w-5xl mx-auto  py-10">
       <div className="flex items-center justify-end mb-8">
         <PrimaryBtn onClick={onAddWebsite}>
           <FaPlus className="text-[10px]" /> Website
@@ -525,7 +481,7 @@ function ProjectsPage({
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl border-2 border-dashed border-neutral-200 bg-white p-16 text-center">
+        <div className="rounded-2xl border-2 border-dashed border-neutral-50 bg-white p-16 text-center">
           <FaChartBar className="text-4xl text-emerald-200 mx-auto mb-4" />
           <div className="text-sm font-bold text-neutral-700 mb-1">
             No websites yet
@@ -590,7 +546,6 @@ export default function Dashboard({ projects, user }) {
             onAddModalClose={() => setShowAdd(false)}
           />
         )}
-        {page === "settings" && <SettingsPage user={user} />}
       </main>
     </div>
   );

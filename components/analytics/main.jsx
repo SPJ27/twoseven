@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Chart, registerables } from "chart.js";
 import {
+  FaCrown,
   FaChrome,
   FaFacebook,
   FaGoogle,
@@ -30,6 +31,9 @@ import {
   FaSearch,
   FaPaperclip,
   FaMapMarker,
+  FaShieldAlt,
+  FaUserSlash,
+  FaChevronDown,
 } from "react-icons/fa";
 import Link from "next/link";
 
@@ -74,27 +78,12 @@ function getDateRange(period) {
 }
 
 const MONTH_NAMES = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December",
 ];
 const DAY_NAMES = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 const PERIODS = [
-  "Today",
-  "Yesterday",
-  "Last 7 days",
-  "Last 30 days",
-  "All time",
-  "Custom range",
+  "Today","Yesterday","Last 7 days","Last 30 days","All time","Custom range",
 ];
 
 function isoDate(d) {
@@ -216,13 +205,7 @@ function getRightRows(data, tab) {
 }
 
 function CalendarMonth({
-  year,
-  month,
-  rangeStart,
-  rangeEnd,
-  hovered,
-  onDayClick,
-  onDayHover,
+  year, month, rangeStart, rangeEnd, hovered, onDayClick, onDayHover,
 }) {
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -236,15 +219,11 @@ function CalendarMonth({
     const effectiveEnd = rangeEnd || hovered;
     const lo =
       rangeStart && effectiveEnd
-        ? rangeStart < effectiveEnd
-          ? rangeStart
-          : effectiveEnd
+        ? rangeStart < effectiveEnd ? rangeStart : effectiveEnd
         : rangeStart;
     const hi =
       rangeStart && effectiveEnd
-        ? rangeStart < effectiveEnd
-          ? effectiveEnd
-          : rangeStart
+        ? rangeStart < effectiveEnd ? effectiveEnd : rangeStart
         : rangeStart;
 
     if (iso === lo && iso === hi) return "start-only";
@@ -264,10 +243,7 @@ function CalendarMonth({
       </div>
       <div className="grid grid-cols-7 gap-0.5 mb-1">
         {DAY_NAMES.map((d) => (
-          <div
-            key={d}
-            className="text-center text-[10px] font-semibold text-[#9B9DAF] py-0.5"
-          >
+          <div key={d} className="text-center text-[10px] font-semibold text-[#9B9DAF] py-0.5">
             {d}
           </div>
         ))}
@@ -280,23 +256,21 @@ function CalendarMonth({
           const isToday = iso === today;
           const isFuture = iso > today;
 
-          const bgClass =
-            {
-              start: "bg-[#06AB78]",
-              end: "bg-[#06AB78]",
-              "start-only": "bg-[#06AB78]",
-              "in-range": "bg-[rgba(6,171,120,0.15)]",
-              default: "bg-transparent",
-            }[state] ?? "bg-transparent";
+          const bgClass = {
+            start: "bg-[#06AB78]",
+            end: "bg-[#06AB78]",
+            "start-only": "bg-[#06AB78]",
+            "in-range": "bg-[rgba(6,171,120,0.15)]",
+            default: "bg-transparent",
+          }[state] ?? "bg-transparent";
 
-          const textClass =
-            {
-              start: "text-white",
-              end: "text-white",
-              "start-only": "text-white",
-              "in-range": "text-[#06AB78]",
-              default: isFuture ? "text-[#9B9DAF]" : "text-[#30313D]",
-            }[state] ?? "text-[#30313D]";
+          const textClass = {
+            start: "text-white",
+            end: "text-white",
+            "start-only": "text-white",
+            "in-range": "text-[#06AB78]",
+            default: isFuture ? "text-[#9B9DAF]" : "text-[#30313D]",
+          }[state] ?? "text-[#30313D]";
 
           return (
             <div
@@ -307,14 +281,10 @@ function CalendarMonth({
               className={[
                 "text-center text-xs py-[5px] rounded-md transition-colors",
                 state !== "default" ? "font-bold" : "font-normal",
-                isFuture
-                  ? "opacity-35 cursor-default"
-                  : "cursor-pointer hover:bg-[rgba(6,171,120,0.07)]",
+                isFuture ? "opacity-35 cursor-default" : "cursor-pointer hover:bg-[rgba(6,171,120,0.07)]",
                 bgClass,
                 textClass,
-                isToday && state === "default"
-                  ? "outline outline-[1.5px] outline-[#06AB78]"
-                  : "",
+                isToday && state === "default" ? "outline outline-[1.5px] outline-[#06AB78]" : "",
               ].join(" ")}
             >
               {d}
@@ -335,10 +305,7 @@ function CustomRangePicker({ onApply, onCancel, initialFrom, initialTo }) {
   const [hovered, setHovered] = useState(null);
 
   const left = { y: viewYear, m: viewMonth };
-  const right =
-    viewMonth === 11
-      ? { y: viewYear + 1, m: 0 }
-      : { y: viewYear, m: viewMonth + 1 };
+  const right = viewMonth === 11 ? { y: viewYear + 1, m: 0 } : { y: viewYear, m: viewMonth + 1 };
 
   function handleDayClick(iso) {
     if (!rangeStart || (rangeStart && rangeEnd)) {
@@ -356,80 +323,38 @@ function CustomRangePicker({ onApply, onCancel, initialFrom, initialTo }) {
 
   function nav(dir) {
     if (dir === -1) {
-      if (viewMonth === 0) {
-        setViewYear((y) => y - 1);
-        setViewMonth(11);
-      } else {
-        setViewMonth((m) => m - 1);
-      }
+      if (viewMonth === 0) { setViewYear((y) => y - 1); setViewMonth(11); }
+      else setViewMonth((m) => m - 1);
     } else {
-      if (viewMonth === 11) {
-        setViewYear((y) => y + 1);
-        setViewMonth(0);
-      } else {
-        setViewMonth((m) => m + 1);
-      }
+      if (viewMonth === 11) { setViewYear((y) => y + 1); setViewMonth(0); }
+      else setViewMonth((m) => m + 1);
     }
   }
 
   const canApply = rangeStart && rangeEnd;
   const fmt = (iso) =>
     iso
-      ? new Date(iso + "T00:00:00").toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        })
+      ? new Date(iso + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
       : "—";
 
   return (
     <div className="absolute top-[calc(100%+6px)] left-0 z-[100] bg-white border border-[#E4E5ED] rounded-2xl p-5 shadow-[0_12px_32px_rgba(48,49,61,0.14)]">
       <div className="flex items-center justify-between mb-3.5">
-        <button
-          onClick={() => nav(-1)}
-          className="border border-[#E4E5ED] bg-transparent cursor-pointer text-[#6B6D80] text-sm px-2.5 py-0.5 rounded-lg hover:border-[#06AB78]"
-        >
-          ‹
-        </button>
-        <button
-          onClick={() => nav(1)}
-          className="border border-[#E4E5ED] bg-transparent cursor-pointer text-[#6B6D80] text-sm px-2.5 py-0.5 rounded-lg hover:border-[#06AB78]"
-        >
-          ›
-        </button>
+        <button onClick={() => nav(-1)} className="border border-[#E4E5ED] bg-transparent cursor-pointer text-[#6B6D80] text-sm px-2.5 py-0.5 rounded-lg hover:border-[#06AB78]">‹</button>
+        <button onClick={() => nav(1)} className="border border-[#E4E5ED] bg-transparent cursor-pointer text-[#6B6D80] text-sm px-2.5 py-0.5 rounded-lg hover:border-[#06AB78]">›</button>
       </div>
       <div className="flex gap-6">
-        <CalendarMonth
-          year={left.y}
-          month={left.m}
-          rangeStart={rangeStart}
-          rangeEnd={rangeEnd}
-          hovered={hovered}
-          onDayClick={handleDayClick}
-          onDayHover={setHovered}
-        />
+        <CalendarMonth year={left.y} month={left.m} rangeStart={rangeStart} rangeEnd={rangeEnd} hovered={hovered} onDayClick={handleDayClick} onDayHover={setHovered} />
         <div className="w-px bg-[#E4E5ED]" />
-        <CalendarMonth
-          year={right.y}
-          month={right.m}
-          rangeStart={rangeStart}
-          rangeEnd={rangeEnd}
-          hovered={hovered}
-          onDayClick={handleDayClick}
-          onDayHover={setHovered}
-        />
+        <CalendarMonth year={right.y} month={right.m} rangeStart={rangeStart} rangeEnd={rangeEnd} hovered={hovered} onDayClick={handleDayClick} onDayHover={setHovered} />
       </div>
       <div className="mt-3.5 pt-3.5 border-t border-[#E4E5ED] flex items-center justify-between gap-3">
         <div className="text-xs text-[#6B6D80] flex-1">
           {rangeStart ? (
             <>
-              <span className="font-semibold text-[#30313D]">
-                {fmt(rangeStart)}
-              </span>
+              <span className="font-semibold text-[#30313D]">{fmt(rangeStart)}</span>
               {" → "}
-              <span
-                className={`font-semibold ${rangeEnd ? "text-[#30313D]" : "text-[#9B9DAF]"}`}
-              >
+              <span className={`font-semibold ${rangeEnd ? "text-[#30313D]" : "text-[#9B9DAF]"}`}>
                 {rangeEnd ? fmt(rangeEnd) : "pick end date"}
               </span>
             </>
@@ -438,12 +363,7 @@ function CustomRangePicker({ onApply, onCancel, initialFrom, initialTo }) {
           )}
         </div>
         <div className="flex gap-2">
-          <button
-            onClick={onCancel}
-            className="px-3.5 py-1.5 text-xs font-medium rounded-lg border border-[#E4E5ED] bg-transparent text-[#6B6D80] cursor-pointer hover:border-[#06AB78]"
-          >
-            Cancel
-          </button>
+          <button onClick={onCancel} className="px-3.5 py-1.5 text-xs font-medium rounded-lg border border-[#E4E5ED] bg-transparent text-[#6B6D80] cursor-pointer hover:border-[#06AB78]">Cancel</button>
           <button
             onClick={() => canApply && onApply(rangeStart, rangeEnd)}
             disabled={!canApply}
@@ -460,7 +380,7 @@ function CustomRangePicker({ onApply, onCancel, initialFrom, initialTo }) {
 function NotConnectedBadge({ connected }) {
   if (connected === true) return null;
   return (
-    <div className="fixed bottom-5 bg-yellow-100 left-5 z-50 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-yellow-500 shadow-sm text-xs font-medium text-[#6B6D80] select-none pointer-events-none">
+    <div className="fixed bottom-5 bg-yellow-100 left-5 z-50 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-yellow-400 shadow-sm text-xs font-medium text-[#6B6D80] select-none pointer-events-none">
       <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
       Not connected
     </div>
@@ -493,20 +413,17 @@ function Avatar({ name }) {
 
 function StatCard({ label, value, accent }) {
   return (
-    <div className="flex flex-col gap-1 min-w-[100px]">
+    <div className="flex flex-col gap-1 min-w-25">
       <div className="flex items-center gap-1.5">
         {accent && (
-          <span
-            className="w-2.5 h-2.5 rounded-[3px] shrink-0"
-            style={{ background: accent }}
-          />
+          <span className="w-2.5 h-2.5 rounded-[3px] shrink-0" style={{ background: accent }} />
         )}
-        <span className="text-[11px] text-[#6B6D80] font-medium tracking-[0.04em] uppercase">
+        <span className={`text-xs ${value == 0 ? "text-[#9B9DAF]" : "text-[#30313D]"} font-light tracking-[0.04em]`}>
           {label}
         </span>
       </div>
       <span className="text-[26px] font-extrabold text-[#30313D] tabular-nums leading-none">
-        {value ?? "–"}
+        {value == 0 ? "–" : value}
       </span>
     </div>
   );
@@ -544,17 +461,12 @@ function BarRow({ label, value, max, icon }) {
       <div className="flex-1 min-w-0">
         <div className="flex justify-between mb-1">
           <span className="text-[13px] text-[#30313D] truncate">{label}</span>
-          <span className="text-[13px] font-bold text-[#30313D] ml-2 tabular-nums">
-            {value}
-          </span>
+          <span className="text-[13px] font-bold text-[#30313D] ml-2 tabular-nums">{value}</span>
         </div>
         <div className="h-[5px] rounded-full bg-[rgba(6,171,120,0.15)] overflow-hidden">
           <div
             className="h-full rounded-full transition-[width] duration-[600ms] ease-[cubic-bezier(.4,0,.2,1)]"
-            style={{
-              width: `${pct}%`,
-              background: `linear-gradient(90deg, #06AB78, #08C98D)`,
-            }}
+            style={{ width: `${pct}%`, background: `linear-gradient(90deg, #06AB78, #08C98D)` }}
           />
         </div>
       </div>
@@ -564,32 +476,26 @@ function BarRow({ label, value, max, icon }) {
 
 function PeriodDropdown({ value, onChange, customLabel, onCustomClick }) {
   const [open, setOpen] = useState(false);
-  const displayLabel =
-    value === "Custom range" && customLabel ? customLabel : value;
+  const displayLabel = value === "Custom range" && customLabel ? customLabel : value;
   return (
     <div className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1.5 border border-[#E4E5ED] rounded-[10px] px-3 py-1.5 text-[13px] font-medium text-[#30313D] bg-white cursor-pointer transition-colors max-w-[240px] hover:border-[#06AB78]"
+        className="flex items-center gap-1.5 border border-[#E4E5ED] rounded-lg px-3 py-1.5 text-[13px] font-medium text-[#30313D] bg-white cursor-pointer transition-colors max-w-60 hover:bg-neutral-50"
       >
         <span className="truncate">{displayLabel}</span>
         <span className="text-[#9B9DAF] ml-0.5 text-[10px] shrink-0">▾</span>
       </button>
       {open && (
-        <div className="absolute top-[calc(100%+4px)] left-0 z-50 bg-white border border-[#E4E5ED] rounded-xl overflow-hidden shadow-[0_8px_24px_rgba(48,49,61,0.12)] min-w-[160px]">
+        <div className="absolute top-[calc(100%+4px)] left-0 z-50 bg-white border border-[#E4E5ED] rounded-lg overflow-hidden shadow-[0_8px_24px_rgba(48,49,61,0.12)] min-w-[160px]">
           {PERIODS.map((p) => (
             <button
               key={p}
               onClick={() => {
-                if (p === "Custom range") {
-                  setOpen(false);
-                  onCustomClick();
-                } else {
-                  onChange(p);
-                  setOpen(false);
-                }
+                if (p === "Custom range") { setOpen(false); onCustomClick(); }
+                else { onChange(p); setOpen(false); }
               }}
-              className={`w-full text-left px-4 py-2.5 text-[13px] cursor-pointer border-none flex items-center gap-2 transition-colors hover:bg-[rgba(6,171,120,0.07)] ${
+              className={`w-full text-left px-4 py-1.5 text-[13px] cursor-pointer border-none flex items-center gap-2 transition-colors hover:bg-[rgba(6,171,120,0.07)] ${
                 p === value
                   ? "bg-[rgba(6,171,120,0.07)] text-[#06AB78] font-semibold"
                   : "bg-transparent text-[#30313D] font-normal"
@@ -616,12 +522,7 @@ function ErrorBanner({ message, onRetry }) {
   return (
     <div className="rounded-xl border border-[#FFCDD2] bg-[#FFF5F5] px-4 py-3 flex justify-between items-center">
       <span className="text-[13px] text-[#C62828]">{message}</span>
-      <button
-        onClick={onRetry}
-        className="text-xs text-[#C62828] bg-none border-none cursor-pointer underline"
-      >
-        Retry
-      </button>
+      <button onClick={onRetry} className="text-xs text-[#C62828] bg-none border-none cursor-pointer underline">Retry</button>
     </div>
   );
 }
@@ -653,12 +554,7 @@ const CHART_OPTIONS = {
   scales: {
     x: {
       grid: { color: "rgba(48,49,61,0.05)", drawBorder: false },
-      ticks: {
-        color: "#9B9DAF",
-        font: { size: 11 },
-        maxRotation: 0,
-        maxTicksLimit: 10,
-      },
+      ticks: { color: "#9B9DAF", font: { size: 11 }, maxRotation: 0, maxTicksLimit: 10 },
       border: { display: false },
     },
     y: {
@@ -672,26 +568,159 @@ const CHART_OPTIONS = {
 
 function SortIcon({ col, sortCol, sortDir }) {
   if (sortCol !== col) return <FaSort className="text-[#9B9DAF] ml-1 inline" />;
-  return sortDir === "asc" ? (
-    <FaSortUp className="text-[#06AB78] ml-1 inline" />
-  ) : (
-    <FaSortDown className="text-[#06AB78] ml-1 inline" />
-  );
+  return sortDir === "asc"
+    ? <FaSortUp className="text-[#06AB78] ml-1 inline" />
+    : <FaSortDown className="text-[#06AB78] ml-1 inline" />;
 }
 
-function UsersTable({ users = [] }) {
+// ─── User Settings Dropdown ───────────────────────────────────────────────────
+function UserSettingsDropdown({ user, onAdminChange, tracker_id }) {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function handler(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  async function handleAdminToggle(makeAdmin, email, tracker_id) {
+    setLoading(true);
+    setOpen(false);
+    try {
+      const response = await fetch(`/api/admin?trackerId=${tracker_id}&email=${email}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ admin: makeAdmin }),
+      });
+      console.log("Admin toggle response:", response);
+      onAdminChange(user.id, makeAdmin);
+    } catch (err) {
+      console.error("Failed to update admin status", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const isAdmin = !!user.admin;
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        disabled={loading}
+        className={`flex items-center gap-1 text-[11px] font-semibold rounded-full border px-2 py-0.5 transition-colors cursor-pointer select-none ${
+          isAdmin
+            ? "text-[#06AB78] bg-[rgba(6,171,120,0.08)] border-[rgba(6,171,120,0.25)] hover:bg-[rgba(6,171,120,0.15)]"
+            : "text-[#9B9DAF] bg-[rgba(155,157,175,0.07)] border-[rgba(155,157,175,0.15)] hover:border-[#06AB78] hover:text-[#06AB78]"
+        } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+      >
+        {loading ? (
+          <span className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" />
+        ) : isAdmin ? (
+          <FaShieldAlt className="text-[9px]" />
+        ) : (
+          <FaUser className="text-[9px]" />
+        )}
+        <span>{isAdmin ? "Admin" : "User"}</span>
+        <FaChevronDown className="text-[7px] opacity-60" />
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-[calc(100%+4px)] z-50 bg-white border border-[#E4E5ED] rounded-xl overflow-hidden shadow-[0_8px_24px_rgba(48,49,61,0.12)] min-w-[180px]">
+          {/* Header */}
+          <div className="px-3 py-2 border-b border-[#E4E5ED] bg-[#F7F8F9]">
+            <p className="text-[10px] font-bold text-[#9B9DAF] uppercase tracking-[0.06em]">
+              Access level
+            </p>
+          </div>
+
+          {/* Grant admin */}
+          <button
+            onClick={() => handleAdminToggle(true, user.email, tracker_id)}
+            disabled={isAdmin}
+            className={`w-full text-left px-3 py-2.5 flex items-start gap-2.5 border-none transition-colors ${
+              isAdmin
+                ? "bg-[rgba(6,171,120,0.06)] cursor-default"
+                : "bg-white cursor-pointer hover:bg-[rgba(6,171,120,0.07)]"
+            }`}
+          >
+            <div className={`mt-0.5 w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${isAdmin ? "bg-[rgba(6,171,120,0.15)]" : "bg-[rgba(6,171,120,0.08)]"}`}>
+              <FaShieldAlt className={`text-[10px] ${isAdmin ? "text-[#06AB78]" : "text-[#06AB78]"}`} />
+            </div>
+            <div>
+              <p className={`text-[12px] font-semibold leading-tight ${isAdmin ? "text-[#06AB78]" : "text-[#30313D]"}`}>
+                Add admin access
+                {isAdmin && (
+                  <span className="ml-1.5 text-[9px] font-bold bg-[#06AB78] text-white rounded-full px-1.5 py-0.5 align-middle">
+                    Active
+                  </span>
+                )}
+              </p>
+              <p className="text-[10px] text-[#9B9DAF] mt-0.5 leading-snug">
+                Full dashboard & user management
+              </p>
+            </div>
+          </button>
+
+          {/* Remove admin */}
+          <button
+            onClick={() => handleAdminToggle(false, user.email, tracker_id)}
+            disabled={!isAdmin}
+            className={`w-full text-left px-3 py-2.5 flex items-start gap-2.5 border-none border-t border-[#E4E5ED] transition-colors ${
+              !isAdmin
+                ? "bg-[rgba(155,157,175,0.04)] cursor-default"
+                : "bg-white cursor-pointer hover:bg-[#FFF5F5]"
+            }`}
+          >
+            <div className={`mt-0.5 w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${!isAdmin ? "bg-[rgba(155,157,175,0.08)]" : "bg-[rgba(198,40,40,0.08)]"}`}>
+              <FaUserSlash className={`text-[10px] ${!isAdmin ? "text-[#9B9DAF]" : "text-[#C62828]"}`} />
+            </div>
+            <div>
+              <p className={`text-[12px] font-semibold leading-tight ${!isAdmin ? "text-[#9B9DAF]" : "text-[#C62828]"}`}>
+                Remove admin access
+                {!isAdmin && (
+                  <span className="ml-1.5 text-[9px] font-bold bg-[rgba(155,157,175,0.15)] text-[#9B9DAF] rounded-full px-1.5 py-0.5 align-middle">
+                    Active
+                  </span>
+                )}
+              </p>
+              <p className="text-[10px] text-[#9B9DAF] mt-0.5 leading-snug">
+                Reverts to standard user role
+              </p>
+            </div>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+function UsersTable({ users: initialUsers = [], creator, tracker_id }) {
+  const [users, setUsers] = useState(initialUsers);
   const [search, setSearch] = useState("");
   const [sortCol, setSortCol] = useState("lastSeen");
   const [sortDir, setSortDir] = useState("desc");
   const [page, setPage] = useState(0);
   const PAGE_SIZE = 8;
 
+  // Keep local users in sync if prop changes
+  useEffect(() => { setUsers(initialUsers); }, [initialUsers]);
+
+  function handleAdminChange(userId, isAdmin) {
+    setUsers((prev) =>
+      prev.map((u) => (u.id === userId ? { ...u, admin: isAdmin } : u))
+    );
+  }
+
   function toggleSort(col) {
     if (sortCol === col) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    else {
-      setSortCol(col);
-      setSortDir("asc");
-    }
+    else { setSortCol(col); setSortDir("asc"); }
     setPage(0);
   }
 
@@ -706,23 +735,17 @@ function UsersTable({ users = [] }) {
       );
     })
     .sort((a, b) => {
-      let av = a[sortCol] ?? "",
-        bv = b[sortCol] ?? "";
-      if (sortCol === "visits") {
-        av = Number(av) || 0;
-        bv = Number(bv) || 0;
-      } else if (sortCol === "lastSeen" || sortCol === "dateCreated") {
+      let av = a[sortCol] ?? "", bv = b[sortCol] ?? "";
+      if (sortCol === "visits") { av = Number(av) || 0; bv = Number(bv) || 0; }
+      else if (sortCol === "lastSeen" || sortCol === "dateCreated") {
         av = new Date(av).getTime() || 0;
         bv = new Date(bv).getTime() || 0;
-      } else {
-        av = String(av).toLowerCase();
-        bv = String(bv).toLowerCase();
-      }
+      } else { av = String(av).toLowerCase(); bv = String(bv).toLowerCase(); }
       if (av < bv) return sortDir === "asc" ? -1 : 1;
       if (av > bv) return sortDir === "asc" ? 1 : -1;
       return 0;
     });
-
+    console.log('creator', creator);
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paged = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
@@ -740,10 +763,7 @@ function UsersTable({ users = [] }) {
           <FaSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#9B9DAF] text-[11px] pointer-events-none" />
           <input
             value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(0);
-            }}
+            onChange={(e) => { setSearch(e.target.value); setPage(0); }}
             placeholder="Search name, email, ID…"
             className="pl-8 pr-3 py-1.5 text-xs border border-[#E4E5ED] rounded-[10px] text-[#30313D] outline-none w-[210px] transition-colors bg-white focus:border-[#06AB78]"
           />
@@ -755,20 +775,8 @@ function UsersTable({ users = [] }) {
           <thead className="bg-[#F7F8F9] border-b border-[#E4E5ED]">
             <tr>
               {[
-                {
-                  label: "Name",
-                  col: "name",
-                  icon: (
-                    <FaUser className="inline mr-1.5 text-[#9B9DAF] text-[11px]" />
-                  ),
-                },
-                {
-                  label: "Email",
-                  col: "email",
-                  icon: (
-                    <FaEnvelope className="inline mr-1.5 text-[#9B9DAF] text-[11px]" />
-                  ),
-                },
+                { label: "Name", col: "name", icon: <FaUser className="inline mr-1.5 text-[#9B9DAF] text-[11px]" /> },
+                { label: "Email", col: "email", icon: <FaEnvelope className="inline mr-1.5 text-[#9B9DAF] text-[11px]" /> },
                 { label: "Visits", col: "visits", icon: null },
                 { label: "Last Seen", col: "lastSeen", icon: null },
               ].map(({ label, col, icon }) => (
@@ -777,22 +785,18 @@ function UsersTable({ users = [] }) {
                   onClick={() => toggleSort(col)}
                   className="px-4 py-2.5 text-left text-[11px] font-bold text-[#6B6D80] cursor-pointer select-none whitespace-nowrap tracking-[0.05em] uppercase"
                 >
-                  {icon}
-                  {label}{" "}
-                  <SortIcon col={col} sortCol={sortCol} sortDir={sortDir} />
+                  {icon}{label} <SortIcon col={col} sortCol={sortCol} sortDir={sortDir} />
                 </th>
               ))}
-              <th className="px-4 py-2.5 text-left text-[11px] font-bold text-[#6B6D80] whitespace-nowrap tracking-[0.05em] uppercase">
-                Location
-              </th>
-              <th className="px-4 py-2.5 text-left text-[11px] font-bold text-[#6B6D80] whitespace-nowrap tracking-[0.05em] uppercase">
-                Browser / OS
-              </th>
+              <th className="px-4 py-2.5 text-left text-[11px] font-bold text-[#6B6D80] whitespace-nowrap tracking-[0.05em] uppercase">Location</th>
+              <th className="px-4 py-2.5 text-left text-[11px] font-bold text-[#6B6D80] whitespace-nowrap tracking-[0.05em] uppercase">Browser / OS</th>
+              <th className="px-4 py-2.5 text-left text-[11px] font-bold text-[#6B6D80] whitespace-nowrap tracking-[0.05em] uppercase">Settings</th>
             </tr>
           </thead>
           <tbody>
             {paged.length > 0 ? (
               paged.map((u, i) => (
+               
                 <tr
                   key={u.id}
                   className={`transition-colors hover:bg-[rgba(6,171,120,0.07)] ${i > 0 ? "border-t border-[#E4E5ED]" : ""}`}
@@ -801,53 +805,35 @@ function UsersTable({ users = [] }) {
                     <div className="flex items-center gap-2.5">
                       <Avatar name={u.name} />
                       <span className="text-[13px] text-[#30313D] font-semibold truncate max-w-[140px]">
-                        {u.name || (
-                          <span className="text-[#9B9DAF] italic font-normal">
-                            Anonymous
-                          </span>
-                        )}
+                        {u.name || <span className="text-[#9B9DAF] italic font-normal">Anonymous</span>}
                       </span>
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <span className="text-[13px] text-[#6B6D80] truncate block max-w-[180px]">
-                      {u.email || (
-                        <span className="text-[#9B9DAF] italic">—</span>
-                      )}
+                      {u.email || <span className="text-[#9B9DAF] italic">—</span>}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[13px] font-bold text-[#06AB78] tabular-nums">
-                      {u.visits ?? "—"}
-                    </span>
+                    <span className="text-[13px] font-bold text-[#06AB78] tabular-nums">{u.visits ?? "—"}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-[13px] text-[#6B6D80] whitespace-nowrap">
-                      {fmtDate(u.lastSeen)}
-                    </span>
+                    <span className="text-[13px] text-[#6B6D80] whitespace-nowrap">{fmtDate(u.lastSeen)}</span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-col gap-0.5">
                       <span className="flex items-center gap-1.5 text-[13px] text-[#6B6D80]">
                         <span>{getFlag(u.country)}</span>
-                        <span className="truncate max-w-[90px]">
-                          {u.country || "—"}
-                        </span>
+                        <span className="truncate max-w-[90px]">{u.country || "—"}</span>
                       </span>
-                      {u.city && (
-                        <span className="text-[11px] text-[#9B9DAF] truncate max-w-[90px]">
-                          {u.city}
-                        </span>
-                      )}
+                      {u.city && <span className="text-[11px] text-[#9B9DAF] truncate max-w-[90px]">{u.city}</span>}
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-col gap-0.5">
                       <span className="flex items-center gap-1.5 text-[13px] text-[#6B6D80]">
                         {getBrowserIcon(u.browser)}
-                        <span className="truncate max-w-[80px]">
-                          {u.browser || "—"}
-                        </span>
+                        <span className="truncate max-w-[80px]">{u.browser || "—"}</span>
                       </span>
                       {u.os && (
                         <span className="flex items-center gap-1.5 text-[11px] text-[#9B9DAF]">
@@ -857,17 +843,22 @@ function UsersTable({ users = [] }) {
                       )}
                     </div>
                   </td>
+                  {/* ── Settings column: admin dropdown ── */}
+                  <td className="px-4 py-3">
+                    {creator!==u.email && <UserSettingsDropdown tracker_id={tracker_id} user={u} onAdminChange={handleAdminChange} creator={creator}/>}
+                    {creator===u.email && (
+                      <span className="text-[11px] font-semibold w-19 border px-2 py-0.5 text-white bg-amber-400 justify-center rounded-2xl flex items-center gap-1">
+                        <FaCrown className="text-[10px]" />
+                        Owner
+                      </span>
+                    )}
+                    </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td
-                  colSpan={6}
-                  className="px-4 py-10 text-center text-[13px] text-[#9B9DAF]"
-                >
-                  {search
-                    ? "No users match your search."
-                    : "No user data available."}
+                <td colSpan={7} className="px-4 py-10 text-center text-[13px] text-[#9B9DAF]">
+                  {search ? "No users match your search." : "No user data available."}
                 </td>
               </tr>
             )}
@@ -878,33 +869,16 @@ function UsersTable({ users = [] }) {
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-5 py-3 border-t border-[#E4E5ED] bg-[#F7F8F9]">
           <span className="text-xs text-[#9B9DAF]">
-            {page * PAGE_SIZE + 1}–
-            {Math.min((page + 1) * PAGE_SIZE, filtered.length)} of{" "}
-            {filtered.length}
+            {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
           </span>
           <div className="flex gap-1">
             {[
-              {
-                label: "←",
-                action: () => setPage((p) => Math.max(0, p - 1)),
-                disabled: page === 0,
-              },
+              { label: "←", action: () => setPage((p) => Math.max(0, p - 1)), disabled: page === 0 },
               ...Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
-                const pageNum =
-                  totalPages <= 5
-                    ? i
-                    : Math.max(0, Math.min(page - 2, totalPages - 5)) + i;
-                return {
-                  label: pageNum + 1,
-                  action: () => setPage(pageNum),
-                  active: pageNum === page,
-                };
+                const pageNum = totalPages <= 5 ? i : Math.max(0, Math.min(page - 2, totalPages - 5)) + i;
+                return { label: pageNum + 1, action: () => setPage(pageNum), active: pageNum === page };
               }),
-              {
-                label: "→",
-                action: () => setPage((p) => Math.min(totalPages - 1, p + 1)),
-                disabled: page >= totalPages - 1,
-              },
+              { label: "→", action: () => setPage((p) => Math.min(totalPages - 1, p + 1)), disabled: page >= totalPages - 1 },
             ].map((btn, i) => (
               <button
                 key={i}
@@ -928,7 +902,7 @@ function UsersTable({ users = [] }) {
   );
 }
 
-export default function AnalyticsComponents({ TRACKER_ID }) {
+export default function AnalyticsComponents({ TRACKER_ID, user_email }) {
   const chartRef = useRef(null);
   const chartInst = useRef(null);
 
@@ -959,9 +933,9 @@ export default function AnalyticsComponents({ TRACKER_ID }) {
       const res = await fetch(`${API_BASE}?${params}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
-      console.log(json.data)
       if (!json.success) throw new Error(json.error || "Unknown error");
       setData(json.data);
+      console.log('fetched data', json.data);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -969,9 +943,7 @@ export default function AnalyticsComponents({ TRACKER_ID }) {
     }
   }
 
-  useEffect(() => {
-    fetchStats(period);
-  }, [period]);
+  useEffect(() => { fetchStats(period); }, [period]);
 
   useEffect(() => {
     if (!chartRef.current || !data?.graph) return;
@@ -982,27 +954,23 @@ export default function AnalyticsComponents({ TRACKER_ID }) {
       type: "line",
       data: {
         labels: data.graph.map((d) => d.label),
-        datasets: [
-          {
-            data: data.graph.map((d) => d.visits),
-            borderColor: P.primary,
-            borderWidth: 2.5,
-            backgroundColor: grad,
-            fill: true,
-            tension: 0.45,
-            pointRadius: 0,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: P.primary,
-            pointHoverBorderColor: "#fff",
-            pointHoverBorderWidth: 2,
-          },
-        ],
+        datasets: [{
+          data: data.graph.map((d) => d.visits),
+          borderColor: P.primary,
+          borderWidth: 2.5,
+          backgroundColor: grad,
+          fill: true,
+          tension: 0.45,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: P.primary,
+          pointHoverBorderColor: "#fff",
+          pointHoverBorderWidth: 2,
+        }],
       },
       options: CHART_OPTIONS,
     });
-    return () => {
-      if (chartInst.current) chartInst.current.destroy();
-    };
+    return () => { if (chartInst.current) chartInst.current.destroy(); };
   }, [data]);
 
   const leftRows = getLeftRows(data, leftTab);
@@ -1011,26 +979,31 @@ export default function AnalyticsComponents({ TRACKER_ID }) {
   const rightMax = Math.max(0, ...rightRows.map((r) => r.value));
 
   return (
-    <div className="min-h-screen bg-[#F7F8F9] py-6 px-20  font-['Inter',sans-serif]">
-      <div className="max-w-235 mx-auto flex flex-col gap-4">
+    <div className="min-h-screen bg-neutral-50 py-6 font-['Inter',sans-serif]">
+      <div className="max-w-255 mx-auto flex flex-col gap-4">
         <div className="flex items-center gap-2.5 flex-wrap relative">
-          <div className="flex items-center gap-2 border border-[#E4E5ED] rounded-[10px] px-3.5 py-1.5 bg-white">
-            <span className="text-xs font-mono text-[#06AB78] font-bold">
-              {"</>"}
-            </span>
-            <span className="text-[13px] font-medium text-[#30313D]">
-              analytics.sakshamjain.dev
-            </span>
+          <div className="flex">
+            <button
+              onClick={() => fetchStats(period)}
+              disabled={loading}
+              className={`w-8 flex items-center justify-center rounded-l-lg border border-[#E4E5ED] cursor-pointer text-[#6B6D80] bg-white text-base transition-colors hover:bg-neutral-50 hover:text-neutral-700 ${loading ? "opacity-50" : ""}`}
+            >
+              <span className={loading ? "inline-block animate-spin" : ""}>↻</span>
+            </button>
+            <div className="flex items-center gap-2 border-t border-b border-[#E4E5ED] px-3.5 py-1.5 bg-white">
+              <span className="text-[13px] font-medium text-[#30313D]">{data?.domain || "Loading..."}</span>
+            </div>
+            <Link
+              href={`/settings/${TRACKER_ID}`}
+              className={`w-8 flex items-center justify-center rounded-r-lg border border-[#E4E5ED] cursor-pointer text-[#6B6D80] bg-white text-base transition-colors hover:bg-neutral-50 hover:text-neutral-700 ${loading ? "opacity-50" : ""}`}
+            >
+              <span className={loading ? "inline-block animate-spin" : ""}>⚙</span>
+            </Link>
           </div>
-
           <div className="relative">
             <PeriodDropdown
               value={period}
-              onChange={(p) => {
-                setPeriod(p);
-                setCustomFrom(null);
-                setCustomTo(null);
-              }}
+              onChange={(p) => { setPeriod(p); setCustomFrom(null); setCustomTo(null); }}
               customLabel={
                 customFrom && customTo
                   ? `${new Date(customFrom + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })} – ${new Date(customTo + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
@@ -1053,77 +1026,33 @@ export default function AnalyticsComponents({ TRACKER_ID }) {
               />
             )}
           </div>
-
-          <button
-            onClick={() => fetchStats(period)}
-            disabled={loading}
-            className={`w-8 h-8 flex items-center justify-center rounded-[10px] border border-[#E4E5ED] cursor-pointer text-[#6B6D80] bg-white text-base transition-colors hover:border-[#06AB78] hover:text-[#06AB78] ${loading ? "opacity-50" : ""}`}
-          >
-            <span className={loading ? "inline-block animate-spin" : ""}>
-              ↻
-            </span>
-          </button>
-          <Link
-          href={`/settings/${TRACKER_ID}`}
-            className={`w-8 h-8 flex items-center justify-center rounded-[10px] border border-[#E4E5ED] cursor-pointer text-[#6B6D80] bg-white text-base transition-colors hover:border-[#06AB78] hover:text-[#06AB78] ${loading ? "opacity-50" : ""}`}
-          >
-            <span className={loading ? "inline-block animate-spin" : ""}>
-              ⚙
-            </span>
-          </Link>
-
           {data?.bucketMode && (
             <span className="text-xs text-[#6B6D80] ml-auto capitalize">
-              Showing{" "}
-              {data.bucketMode === "day"
-                ? "daily"
-                : data.bucketMode === "week"
-                  ? "weekly"
-                  : "monthly"}{" "}
-              data
+              Showing {data.bucketMode === "day" ? "daily" : data.bucketMode === "week" ? "weekly" : "monthly"} data
             </span>
           )}
         </div>
 
-        {error && (
-          <ErrorBanner
-            message={`Failed to load: ${error}`}
-            onRetry={() => fetchStats(period)}
-          />
-        )}
+        {error && <ErrorBanner message={`Failed to load: ${error}`} onRetry={() => fetchStats(period)} />}
 
-        <div className="rounded-2xl border border-[#E4E5ED] p-5 bg-white">
+        <div className="rounded-lg border border-[#E4E5ED] p-5 bg-white">
           {loading ? (
             <Spinner />
           ) : (
             data && (
               <>
                 <div className="flex flex-wrap items-start gap-6">
-                  <StatCard
-                    label="Visitors"
-                    value={data.totalVisits}
-                    accent={P.primary}
-                  />
+                  <StatCard label="Visitors" value={data.totalVisits} accent={P.primary} />
                   <VDivider />
-                  <StatCard
-                    label="Unique"
-                    value={data.uniqueVisitors}
-                    accent={P.baseSoft}
-                  />
+                  <StatCard label="Unique" value={data.uniqueVisitors} accent={P.baseSoft} />
                   <VDivider />
                   <StatCard label="Sessions" value={data.totalSessions} />
                   <VDivider />
                   <StatCard label="Bounce Rate" value={data.bounceRate} />
                   <VDivider />
-                  <StatCard
-                    label="Avg Time"
-                    value={fmtTime(data.avgTimeSpent)}
-                  />
+                  <StatCard label="Avg Time" value={fmtTime(data.avgTimeSpent)} />
                   <VDivider />
-                  <StatCard
-                    label="Pages/visitor"
-                    value={data.avgVisitsPerUser}
-                  />
+                  <StatCard label="Pages/visitor" value={data.avgVisitsPerUser} />
                 </div>
                 <div className="mt-5 relative h-[260px]">
                   <canvas ref={chartRef} />
@@ -1136,46 +1065,25 @@ export default function AnalyticsComponents({ TRACKER_ID }) {
         {!loading && data && (
           <div className="grid grid-cols-2 gap-4">
             {[
-              {
-                tabs: ["Referrer", "Device", "Browser", "OS"],
-                active: leftTab,
-                onChange: setLeftTab,
-                rows: leftRows,
-                max: leftMax,
-              },
-              {
-                tabs: ["Country", "City", "Page"],
-                active: rightTab,
-                onChange: setRightTab,
-                rows: rightRows,
-                max: rightMax,
-              },
+              { tabs: ["Referrer", "Device", "Browser", "OS"], active: leftTab, onChange: setLeftTab, rows: leftRows, max: leftMax },
+              { tabs: ["Country", "City", "Page"], active: rightTab, onChange: setRightTab, rows: rightRows, max: rightMax },
             ].map(({ tabs, active, onChange, rows, max }, pi) => (
-              <div
-                key={pi}
-                className="rounded-2xl border border-[#E4E5ED] p-5 bg-white"
-              >
+              <div key={pi} className="rounded-2xl border border-[#E4E5ED] p-5 bg-white">
                 <div className="flex items-center justify-between mb-4">
                   <TabBar options={tabs} active={active} onChange={onChange} />
-                  <span className="text-[11px] text-[#9B9DAF] font-semibold tracking-[0.04em]">
-                    VISITORS ↓
-                  </span>
+                  <span className="text-[11px] text-[#9B9DAF] font-semibold tracking-[0.04em]">VISITORS ↓</span>
                 </div>
                 <div className="border-t border-[#E4E5ED]">
-                  {rows.length > 0 ? (
-                    rows.map((r) => <BarRow key={r.label} {...r} max={max} />)
-                  ) : (
-                    <p className="text-[13px] text-[#9B9DAF] text-center py-5">
-                      No data
-                    </p>
-                  )}
+                  {rows.length > 0
+                    ? rows.map((r) => <BarRow key={r.label} {...r} max={max} />)
+                    : <p className="text-[13px] text-[#9B9DAF] text-center py-5">No data</p>
+                  }
                 </div>
               </div>
             ))}
           </div>
         )}
-
-        {!loading && data && <UsersTable users={data.users ?? []} />}
+        {!loading && data && <UsersTable tracker_id={TRACKER_ID} users={data.users ?? []} creator={data.creator ?? ''} />}
       </div>
       {!loading && data && <NotConnectedBadge connected={data.connected} />}
     </div>

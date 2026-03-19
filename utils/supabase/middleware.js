@@ -5,7 +5,7 @@ import {  NextResponse } from "next/server";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
 
-export const createClient = (request) => {
+export const createClient = async (request) => {
   // Create an unmodified response
   let supabaseResponse = NextResponse.next({
     request: {
@@ -33,6 +33,20 @@ export const createClient = (request) => {
       },
     },
   );
+const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
+  if (
+    !user &&
+    !request.nextUrl.pathname.startsWith('/login') &&
+    !request.nextUrl.pathname.startsWith('/api') &&
+    !request.nextUrl.pathname.startsWith('/auth')
+  ) {
+    // no user, potentially respond by redirecting the user to the login page
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
   return supabaseResponse
 };
