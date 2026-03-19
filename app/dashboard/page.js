@@ -6,7 +6,7 @@ export default async function Page() {
   const supabase = createClient(await cookies());
   const {data} = await supabase.auth.getUser();
   const user = data?.user;
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/api/projects?email=${user?.email}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/projects?email=${user?.email}`, {
     headers: {
       "x-user-email": user?.email ?? "",
     },
