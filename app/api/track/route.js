@@ -1,38 +1,30 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+export async function OPTIONS() {
+  return new Response(null, { status: 204, headers: CORS_HEADERS });
+}
+
 export async function POST(req) {
   try {
     const body = await req.json();
     const {
-      id,
-      domain,
-      session_id,
-      user_id,
-      anonymous_id,
-      time_spent,
-      location,
-      start_time,
-      name,
-      email,
-      city,
-      region,
-      country,
-      country_code,
-      latitude,
-      longitude,
-      timezone,
-      ip,
-      device,
-      browser,
-      os,
-      referrer,
+      id, domain, session_id, user_id, anonymous_id, time_spent,
+      location, start_time, name, email, city, region, country,
+      country_code, latitude, longitude, timezone, ip, device, browser,
+      os, referrer,
     } = body;
 
     if (!id || !domain || !session_id) {
       return Response.json(
         { success: false, error: "Invalid request" },
-        { status: 400 }
+        { status: 400, headers: CORS_HEADERS }
       );
     }
 
@@ -48,7 +40,7 @@ export async function POST(req) {
     if (authError) {
       return Response.json(
         { success: false, error: "Tracker not found" },
-        { status: 403 }
+        { status: 403, headers: CORS_HEADERS }
       );
     }
 
@@ -80,17 +72,17 @@ export async function POST(req) {
       console.error("[track] rpc error:", rpcError);
       return Response.json(
         { success: false, error: "Database error" },
-        { status: 500 }
+        { status: 500, headers: CORS_HEADERS }
       );
     }
 
-    return Response.json({ success: true });
+    return Response.json({ success: true }, { headers: CORS_HEADERS });
 
   } catch (err) {
     console.error("[track] unexpected error:", err);
     return Response.json(
       { success: false, error: "Invalid request" },
-      { status: 400 }
+      { status: 400, headers: CORS_HEADERS }
     );
   }
 }
