@@ -187,7 +187,7 @@ function GeneralPage({ domain, setDomain, domain_, id }) {
         <div className="flex justify-end mt-5">
           <button
             onClick={() => {
-              fetch('/api/update', {
+              fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/update`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
