@@ -20,14 +20,12 @@ export default function RootLayout({ children }) {
       <body className={`${inter.className} antialiased`}>
         <TrackerIdentify />
         {children}
-        <Script
-          src="/tracker.js"
-          data-tracker-id="f53c5ee8-7afd-4cda-8782-4a606b722e7b"
-          data-domain="twoseven.sakshamjain.dev"
-          strategy="afterInteractive" 
-          data-allow-localhost="true"
-          data-debug="true"
-        />
+        <script
+  data-tracker-id="f53c5ee8-7afd-4cda-8782-4a606b722e7b"
+  data-domain="twoseven.sakshamjain.dev"
+  strategy="afterInteractive" 
+  src="https://twoseven.sakshamjain.dev/tracker.js">
+</script>
       </body>
     </html>
   );
