@@ -2,11 +2,14 @@
 
 Some buttons are not functional such as "Pick a plan" are not as the website is free.
 
-To get the tracking code, go to the settings page for the website.
-
 TwoSeven is an open-source analytics platform designed to help users understand and track their website performance with accuracy. The name is inspired by my birthdate.
 
 The platform is currently free to use and aims to provide detailed, reliable insights without the complexity or cost associated with traditional analytics tools.
+
+## How to integrate?
+1. Add your website domain in the dashboard
+2. Go to the project settings
+3. Copy the tracking code and paste it into your <head> tag
 
 ## Current Features
  - View the number of visits, new visits, bounce rate, avg. session time during the selected date range
