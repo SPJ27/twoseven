@@ -26,9 +26,9 @@
 
   var API_URL;
   try {
-    API_URL = new URL(CUSTOM_API || "/api/track", window.location.origin).href;
+    API_URL = new URL(CUSTOM_API || "https://twoseven.sakshamjain.dev/api/track", window.location.origin).href;
   } catch (e) {
-    API_URL = "/api/track";
+    API_URL = "https://twoseven.sakshamjain.dev/api/track";
   }
 
   // ---------------------------------------------------------------------------
