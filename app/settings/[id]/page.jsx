@@ -17,7 +17,7 @@ const page = async ({ params }) => {
   const { data } = await supabase.auth.getUser();
   const user = data?.user;
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/projects?email=${user?.email}`,
+    `${process.env.NEXT_PUBLIC_SITE_URL}/api/projects?email=${user?.email}`,
     {
       headers: {
         "x-user-email": user?.email ?? "",
