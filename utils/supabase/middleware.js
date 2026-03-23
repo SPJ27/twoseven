@@ -44,6 +44,8 @@ const {
     !request.nextUrl.pathname.startsWith('/auth') &&
     !request.nextUrl.pathname.startsWith('/_next') &&
     !request.nextUrl.pathname.startsWith('/favicon.ico') &&
+    !request.nextUrl.pathname.startsWith('/manifest.json') &&
+    !request.nextUrl.pathname.startsWith('/api') &&
     request.nextUrl.pathname !== '/' &&
     !request.nextUrl.pathname.startsWith('/tracker.js')
   ) {

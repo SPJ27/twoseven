@@ -127,7 +127,6 @@ function TestimonialCard({ quote, name, role, initial }) {
   );
 }
 
-// ─── PricingCard ─────────────────────────────────────────────
 function PricingCard({ plan, price, sub, features, cta, highlight }) {
   return (
     <div

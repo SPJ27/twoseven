@@ -177,6 +177,7 @@
     if      (/edg\//i.test(ua))         browser = "Edge";
     else if (/opr\//i.test(ua))         browser = "Opera";
     else if (/chrome|crios/i.test(ua))  browser = "Chrome";
+    else if (/arc/i.test(ua))           browser = "Arc";
     else if (/firefox|fxios/i.test(ua)) browser = "Firefox";
     else if (/safari/i.test(ua))        browser = "Safari";
     else if (/trident|msie/i.test(ua))  browser = "IE";

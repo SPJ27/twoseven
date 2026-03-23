@@ -1,20 +1,17 @@
-import AnalyticsComponents from '@/components/analytics/main';
+
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
-import Navbar from '@/components/Navbar';
+import DarkmodeProvider from '@/components/DarkmodeProviders/DarkmodeProvider';
 
-const page = async ({params}) => {
+const page = async ({ params }) => {
+  const { id } = await params;
+  const supabase = createClient(await cookies());
+  const { data } = await supabase.auth.getUser();
+  const user = data?.user.user_metadata;
 
-    const {id} = await params;
-    const supabase = createClient(await cookies());
-      const {data} = await supabase.auth.getUser();
-      const user = data?.user.user_metadata;
   return (
-    <div>
-      <Navbar user={user}/>
-        <AnalyticsComponents TRACKER_ID={id} user_email={user?.email} />
-    </div>
-  )
-}
+    <DarkmodeProvider user={user} trackerId={id} userEmail={user?.email} />
+  );
+};
 
-export default page
+export default page;
