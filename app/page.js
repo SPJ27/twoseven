@@ -100,9 +100,7 @@ function StatCard({ label, value, trend, up }) {
 function FeatureCard({ icon, title, desc }) {
   return (
     <div className="rounded-md border border-neutral-200 bg-white p-6 hover:shadow-lg hover:shadow-neutral-200 hover:border-neutral-100 transition-all duration-200 group">
-      <div className="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center mb-4 text-lg group-hover:scale-110 transition-transform duration-200">
-        {icon}
-      </div>
+      
       <div className="font-bold text-neutral-900 mb-1.5">{title}</div>
       <p className="text-sm text-neutral-500 leading-relaxed">{desc}</p>
     </div>
@@ -231,7 +229,7 @@ function Nav() {
         {[
           ["Features", "#features"],
           ["How it works", "#how-it-works"],
-          ["Pricing", "#pricing"],
+          // ["Pricing", "#pricing"],
         ].map(([label, href]) => (
           <li key={label}>
             <a
@@ -412,12 +410,12 @@ export default function page() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <FeatureCard
             icon={<FaPaperclip />}
-            title="Real-time visitors"
+            title="Visitors and Sessions in real time"
             desc="See who's on your site right now — live counters, active pages, and session maps, without any delay."
           />
           <FeatureCard
             icon={<FaShieldAlt />}
-            title="Cookie-free, GDPR-ready"
+            title="Privacy-first by design"
             desc="No cookies, no fingerprinting, no consent banners. Compliant by default in EU, UK, and beyond."
           />
           <FeatureCard
@@ -437,8 +435,8 @@ export default function page() {
           />
           <FeatureCard
             icon={<FaBell />}
-            title="Spike alerts"
-            desc="Get notified when a post blows up, a campaign lands, or traffic drops — before your boss asks about it."
+            title="Admin access for your team"
+            desc="Invite unlimited teammates to your account with full admin access — no restrictions, no separate plans, no extra cost."
           />
         </div>
       </section>
@@ -543,21 +541,21 @@ export default function page() {
       <section className="py-24 px-6 md:px-10 bg-white border-t border-neutral-200">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-5">
           <TestimonialCard
-            quote="Switched from GA and never looked back. The dashboard actually loads, and I can share it with clients without teaching them anything."
-            name="Jamie R."
-            role="Indie maker"
-            initial="J"
+            quote="This is really cool! Count me in as a customer!!"
+            name="Project Reviewer"
+            role="Flavortown Shipwright"
+            initial="R"
           />
           <TestimonialCard
-            quote="Got it live in literally 2 minutes on our Webflow site. No cookies, no GDPR popups — our legal team is happy."
-            name="Sara M."
-            role="Head of Growth, SaaS"
+            quote="Amazing project, open source alternative for Google analytics, Amazing ui, even better than Google analytics and umami analytics, I'm going to contribute to this"
+            name="..."
+            role="Flavortown Voter"
             initial="S"
           />
           <TestimonialCard
-            quote="The spike alerts are the killer feature. Found out about a viral Reddit post 8 minutes after it happened — server didn't even go down."
-            name="Tom K."
-            role="Solo founder"
+            quote="this is actually useful fr, clean analytics tool idea is nice esp vs cluttered ones like GA tracking + dashboard is solid."
+            name="..."
+            role="Flavortown Voter"
             initial="T"
           />
         </div>
@@ -575,7 +573,7 @@ export default function page() {
             No credit card. No setup call. Just your domain and a script tag.
           </p>
           <Link
-            href="/signup"
+            href="/login"
             className="inline-flex items-center gap-2 text-sm font-bold px-6 py-3 rounded-xl bg-neutral-900 text-white hover:bg-neutral-700 transition-all active:scale-95 shadow-xl shadow-neutral-900/10"
           >
             Add your first website free →
@@ -590,13 +588,16 @@ export default function page() {
             TwoSeven
           </div>
           <div className="flex items-center gap-6">
-            {["Privacy", "Terms", "Twitter", "GitHub"].map((item) => (
+            {[{ label: "Github", href: "https://github.com/SPJ27/twoseven" }, 
+            { label: "Flavortown", href: "https://flavortown.hackclub.com/projects/16754" },
+            // { label: "", href: "" }, 
+            { label: "OpenAnalytics", href: "https://github.com/SPJ27/openanalytics" }].map((item, url) => (
               <Link
-                key={item}
-                href="#"
+                key={item.label}
+                href={item.href}
                 className="text-xs text-neutral-400 hover:text-neutral-600 transition-colors"
               >
-                {item}
+                {item.label}
               </Link>
             ))}
           </div>

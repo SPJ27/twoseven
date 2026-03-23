@@ -116,6 +116,7 @@ function getBrowserIcon(b) {
   if (/safari/i.test(b)) return <Icon icon="logos:safari" width="15" height="15" />;
   if (/edge/i.test(b)) return <Icon icon="logos:microsoft-edge" width="15" height="15" />;
   if (/arc/i.test(b)) return <Icon icon="logos:arc" width="15" height="15" />;
+  if (/opera/i.test(b)) return <Icon icon="logos:opera" width="15" height="15" />;
   return <FaLink style={iconStyle} />;
 }
 function getOSIcon(o) {
@@ -301,7 +302,7 @@ function StatCard({ label, value, trend, up, darkmode }) {
   return (
     <div className={`rounded-lg border max-w-40 p-4 ${darkmode ? "border-neutral-900 bg-neutral-900" : "border-neutral-300/90 bg-neutral-50/40"}`}>
       <div className={`text-xs font-medium tracking-wide mb-1 ${darkmode ? "text-neutral-500" : "text-neutral-400"}`}>{label}</div>
-      <div className={`text-3xl font-extrabold tabular-nums ${darkmode ? "text-neutral-100" : "text-neutral-800"}`}>{value}</div>
+      <div className={`text-2xl font-extrabold tabular-nums ${darkmode ? "text-neutral-100" : "text-neutral-800"}`}>{value}</div>
       <div className={`mt-1 text-xs font-bold rounded-full inline-flex items-center gap-1 px-2 py-0.5 border ${up ? "text-emerald-600 bg-emerald-50 border-emerald-200" : "text-red-500 bg-red-50 border-red-200"}`}>
         {up ? "↑" : "↓"} {trend}%
       </div>
@@ -532,7 +533,7 @@ function UsersTable({ users: initialUsers = [], creator, tracker_id, countryCode
   const cardBg = darkmode ? "bg-neutral-800 border-neutral-700" : "bg-white border-[#E4E5ED]";
 
   return (
-    <div className={`rounded-2xl border overflow-hidden ${cardBg}`}>
+    <div className={`rounded-lg border overflow-hidden ${cardBg}`}>
       <div className={`flex items-center justify-between px-5 py-3.5 border-b ${border} gap-3 flex-wrap`}>
         <div className="flex items-center gap-2">
           <FaUser className="text-[#06AB78] text-[13px]" />

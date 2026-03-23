@@ -16,19 +16,13 @@ export default function LoginPage() {
   const supabase = createClient();
   const [user, setUser] = useState(null);
   const router = useRouter();
-  useEffect(() => {
-  const fetchUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-
-    if (user) {
-      router.push('/dashboard') 
+ useEffect(() => {
+  supabase.auth.getSession().then(({ data }) => {
+    if (data.session) {
+      router.replace("/dashboard");
     }
-
-    setUser(user)
-  }
-
-  fetchUser()
-}, [])
+  });
+}, []);
 
   const signIn = async () => {
     await supabase.auth.signInWithOAuth({

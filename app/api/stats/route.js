@@ -114,6 +114,7 @@ export async function GET(req) {
           city,
           device,
           browser,
+          id,
           os
         )
       )

@@ -177,14 +177,52 @@ function NewProjectModal({ onClose, onCreate, loading }) {
   const [name, setName] = useState("");
   const [domain, setDomain] = useState("");
   const [error, setError] = useState("");
+  const [copied, copy] = useCopy();
+  const [created, setCreated] = useState(false);
 
-  function handleCreate() {
+  async function handleCreate() {
     if (!domain.trim()) return setError("Domain is required.");
     const clean = domain.trim().replace(/^https?:\/\//, "").replace(/\/$/, "");
-    onCreate({ name: name.trim() || clean, domain: clean });
+    const data = await onCreate({ name: name.trim() || clean, domain: clean });
+    const trackerSnippet = `<script\n  data-tracker-id="${data.id}"\n  data-domain="${data.domain}"\n  strategy="afterInteractive" \n  src="https://datafa.st/js/script.js">\n</script>`;
+    copy(trackerSnippet);
+    setCreated(true);
   }
 
   return (
+    created ? (
+      <ModalWrap onClose={onClose} width={520}>
+        <div className="p-7">
+          <div className="flex items-start justify-between mb-5">
+            <div>
+              <div className="text-base font-extrabold text-neutral-800">Tracker Created</div>
+              <div className="text-xs text-neutral-400 mt-1">The tracking snippet has been copied to your clipboard</div>
+            </div>
+            <button onClick={onClose} className="text-neutral-300 hover:text-neutral-500 text-xl leading-none bg-transparent border-none cursor-pointer">×</button>
+          </div>
+          <div className="bg-neutral-900 rounded-xl p-4 relative">
+            <pre className="text-xs text-neutral-300 font-mono leading-relaxed m-0 whitespace-pre-wrap break-all">{trackerSnippet}</pre>
+            <button
+              onClick={() => copy(trackerSnippet)}
+
+              className={`absolute top-3 right-3 flex items-center gap-1.5 text-xs font-semibold
+                px-2.5 py-1.5 rounded-lg border-none cursor-pointer transition-all
+                ${copied ? "bg-emerald-500/20 text-emerald-400" : "bg-white/10 text-neutral-300 hover:bg-white/20"}`}
+            >
+              {copied ? <FaCheck className="text-[10px]" /> : <FaCopy className="text-[10px]" />}
+              {copied ? "Copied!" : "Copy"}
+            </button>
+          </div>
+          <div className="mt-4 flex gap-2 items-start bg-amber-50 border border-amber-200 rounded-xl px-3.5 py-3 text-xs text-amber-700">
+            <span className="flex-shrink-0 mt-0.5">⚠</span>
+            <span>Connected status updates automatically after the first page view is received.</span>
+          </div>
+          <div className="flex justify-end mt-5">
+            <GhostBtn onClick={onClose}>Close</GhostBtn>
+          </div>
+        </div>
+      </ModalWrap>
+    ) : (
     <ModalWrap onClose={onClose}>
       <div className="p-7">
         <div className="flex items-start justify-between mb-6">
@@ -221,7 +259,7 @@ function NewProjectModal({ onClose, onCreate, loading }) {
         </div>
       </div>
     </ModalWrap>
-  );
+    ))
 }
 
 function SnippetModal({ project, onClose }) {
@@ -363,6 +401,7 @@ function ProjectsPage({ initialProjects, userEmail, onAddWebsite, showAddModal, 
       const json = await res.json();
       if (!json.success) throw new Error(json.error);
       setProjects((p) => [...p, json.data]);
+      return json.data;
     } catch (err) {
       console.error("Failed to create project:", err);
     } finally {
