@@ -49,15 +49,18 @@ function PrimaryBtn({ children, onClick, sm, disabled }) {
   );
 }
 
-function GhostBtn({ children, onClick, sm, disabled }) {
+function GhostBtn({ children, onClick, sm, disabled, darkmode }) {
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`inline-flex items-center gap-1.5 font-semibold rounded-xl border border-neutral-200
-        text-neutral-500 hover:border-neutral-300 hover:text-neutral-700 active:scale-95 transition-all bg-white
+      className={`inline-flex items-center gap-1.5 font-semibold rounded-xl border
+        ${darkmode ? "border-neutral-600" : "border-neutral-200"}
+        ${darkmode ? "text-neutral-400 hover:border-neutral-500 hover:text-neutral-300" : "text-neutral-500 hover:border-neutral-300 hover:text-neutral-700"}
+        active:scale-95 transition-all bg-white
         disabled:opacity-50 disabled:cursor-not-allowed
-        ${sm ? "text-xs px-3 py-1.5" : "text-sm px-4 py-2"}`}
+        ${sm ? "text-xs px-3 py-1.5" : "text-sm px-4 py-2"}
+      `}
     >
       {children}
     </button>
@@ -157,14 +160,15 @@ function Sparkline({ data }) {
   );
 }
 
-function ModalWrap({ children, onClose, width = 440 }) {
+function ModalWrap({ children, onClose, width = 440, darkmode }) {
   return (
     <div
       className="fixed inset-0 z-50 bg-neutral-900/30 backdrop-blur-sm flex items-center justify-center"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
-        className="bg-white rounded-2xl border border-neutral-200 shadow-2xl shadow-neutral-900/10 animate-[modalIn_.2s_ease]"
+        className={`rounded-2xl border shadow-2xl shadow-neutral-900/10 animate-[modalIn_.2s_ease]
+          ${darkmode ? "bg-neutral-800 border-neutral-700" : "bg-white border-neutral-200"}`}
         style={{ width, maxWidth: "90vw" }}
       >
         {children}
@@ -173,61 +177,66 @@ function ModalWrap({ children, onClose, width = 440 }) {
   );
 }
 
-function NewProjectModal({ onClose, onCreate, loading }) {
+function NewProjectModal({ onClose, onCreate, loading, darkmode }) {
   const [name, setName] = useState("");
   const [domain, setDomain] = useState("");
   const [error, setError] = useState("");
   const [copied, copy] = useCopy();
   const [created, setCreated] = useState(false);
+  const [trackerSnippet, setTrackerSnippet] = useState("");
 
   async function handleCreate() {
     if (!domain.trim()) return setError("Domain is required.");
     const clean = domain.trim().replace(/^https?:\/\//, "").replace(/\/$/, "");
     const data = await onCreate({ name: name.trim() || clean, domain: clean });
-    const trackerSnippet = `<script\n  data-tracker-id="${data.id}"\n  data-domain="${data.domain}"\n  strategy="afterInteractive" \n  src="https://datafa.st/js/script.js">\n</script>`;
+    setTrackerSnippet(`<script\n  data-tracker-id="${data.id}"\n  data-domain="${data.domain}"\n  strategy="afterInteractive" \n  src="https://datafa.st/js/script.js">\n</script>`);
     copy(trackerSnippet);
     setCreated(true);
   }
 
-  return (
-    created ? (
-      <ModalWrap onClose={onClose} width={520}>
-        <div className="p-7">
-          <div className="flex items-start justify-between mb-5">
-            <div>
-              <div className="text-base font-extrabold text-neutral-800">Tracker Created</div>
-              <div className="text-xs text-neutral-400 mt-1">The tracking snippet has been copied to your clipboard</div>
+  return created ? (
+    <ModalWrap onClose={onClose} width={520} darkmode={darkmode}>
+      <div className="p-7">
+        <div className="flex items-start justify-between mb-5">
+          <div>
+            <div className={`text-base font-extrabold ${darkmode ? "text-neutral-100" : "text-neutral-800"}`}>
+              Tracker Created
             </div>
-            <button onClick={onClose} className="text-neutral-300 hover:text-neutral-500 text-xl leading-none bg-transparent border-none cursor-pointer">×</button>
+            <div className="text-xs text-neutral-400 mt-1">
+              The tracking snippet has been copied to your clipboard. Paste it in the &lt;head&gt; section of your website.
+            </div>
           </div>
-          <div className="bg-neutral-900 rounded-xl p-4 relative">
-            <pre className="text-xs text-neutral-300 font-mono leading-relaxed m-0 whitespace-pre-wrap break-all">{trackerSnippet}</pre>
-            <button
-              onClick={() => copy(trackerSnippet)}
-
-              className={`absolute top-3 right-3 flex items-center gap-1.5 text-xs font-semibold
-                px-2.5 py-1.5 rounded-lg border-none cursor-pointer transition-all
-                ${copied ? "bg-emerald-500/20 text-emerald-400" : "bg-white/10 text-neutral-300 hover:bg-white/20"}`}
-            >
-              {copied ? <FaCheck className="text-[10px]" /> : <FaCopy className="text-[10px]" />}
-              {copied ? "Copied!" : "Copy"}
-            </button>
-          </div>
-          <div className="mt-4 flex gap-2 items-start bg-amber-50 border border-amber-200 rounded-xl px-3.5 py-3 text-xs text-amber-700">
-            <span className="flex-shrink-0 mt-0.5">⚠</span>
-            <span>Connected status updates automatically after the first page view is received.</span>
-          </div>
-          <div className="flex justify-end mt-5">
-            <GhostBtn onClick={onClose}>Close</GhostBtn>
-          </div>
+          <button onClick={onClose} className="text-neutral-300 hover:text-neutral-500 text-xl leading-none bg-transparent border-none cursor-pointer">×</button>
         </div>
-      </ModalWrap>
-    ) : (
-    <ModalWrap onClose={onClose}>
+        <div className="bg-neutral-900 rounded-xl p-4 relative">
+          <pre className="text-xs text-neutral-300 font-mono leading-relaxed m-0 whitespace-pre-wrap break-all">{trackerSnippet}</pre>
+          <button
+            onClick={() => copy(trackerSnippet)}
+            className={`absolute top-3 right-3 flex items-center gap-1.5 text-xs font-semibold
+              px-2.5 py-1.5 rounded-lg border-none cursor-pointer transition-all
+              ${copied ? "bg-emerald-500/20 text-emerald-400" : "bg-white/10 text-neutral-300 hover:bg-white/20"}`}
+          >
+            {copied ? <FaCheck className="text-[10px]" /> : <FaCopy className="text-[10px]" />}
+            {copied ? "Copied!" : "Copy"}
+          </button>
+        </div>
+        <div className="mt-4 flex gap-2 items-start bg-amber-50 border border-amber-200 rounded-xl px-3.5 py-3 text-xs text-amber-700">
+          <span className="flex-shrink-0 mt-0.5">⚠</span>
+          <span>Connected status updates automatically after the first page view is received.</span>
+        </div>
+        <div className="flex justify-end mt-5">
+          <GhostBtn onClick={onClose} darkmode={darkmode}>Close</GhostBtn>
+        </div>
+      </div>
+    </ModalWrap>
+  ) : (
+    <ModalWrap onClose={onClose} darkmode={darkmode}>
       <div className="p-7">
         <div className="flex items-start justify-between mb-6">
           <div>
-            <div className="text-base font-extrabold text-neutral-800">Add Website</div>
+            <div className={`text-base font-extrabold ${darkmode ? "text-neutral-100" : "text-neutral-800"}`}>
+              Add Website
+            </div>
             <div className="text-xs text-neutral-400 mt-1">Start tracking a new domain</div>
           </div>
           <button onClick={onClose} className="text-neutral-300 hover:text-neutral-500 text-xl leading-none bg-transparent border-none cursor-pointer">×</button>
@@ -251,7 +260,7 @@ function NewProjectModal({ onClose, onCreate, loading }) {
           )}
         </div>
         <div className="flex gap-2.5 mt-6 justify-end">
-          <GhostBtn onClick={onClose} disabled={loading}>Cancel</GhostBtn>
+          <GhostBtn onClick={onClose} disabled={loading} darkmode={darkmode}>Cancel</GhostBtn>
           <PrimaryBtn onClick={handleCreate} disabled={loading}>
             {loading ? <span className="w-3 h-3 rounded-full border-2 border-white/30 border-t-white animate-spin" /> : <FaPlus className="text-[10px]" />}
             {loading ? "Creating…" : "Add Website"}
@@ -259,18 +268,20 @@ function NewProjectModal({ onClose, onCreate, loading }) {
         </div>
       </div>
     </ModalWrap>
-    ))
+  );
 }
 
-function SnippetModal({ project, onClose }) {
+function SnippetModal({ project, onClose, darkmode }) {
   const [copied, copy] = useCopy();
   const snippet = `<script\n  data-tracker-id="${project.id}"\n  data-domain="${project.domain}"\n  strategy="afterInteractive" \n  src="https://datafa.st/js/script.js">\n</script>`;
   return (
-    <ModalWrap onClose={onClose} width={520}>
+    <ModalWrap onClose={onClose} width={520} darkmode={darkmode}>
       <div className="p-7">
         <div className="flex items-start justify-between mb-5">
           <div>
-            <div className="text-base font-extrabold text-neutral-800">Install Tracker</div>
+            <div className={`text-base font-extrabold ${darkmode ? "text-neutral-100" : "text-neutral-800"}`}>
+              Install Tracker
+            </div>
             <div className="text-xs text-neutral-400 mt-1">Paste before &lt;/head&gt; on every page</div>
           </div>
           <button onClick={onClose} className="text-neutral-300 hover:text-neutral-500 text-xl leading-none bg-transparent border-none cursor-pointer">×</button>
@@ -292,23 +303,25 @@ function SnippetModal({ project, onClose }) {
           <span>Connected status updates automatically after the first page view is received.</span>
         </div>
         <div className="flex justify-end mt-5">
-          <GhostBtn onClick={onClose}>Close</GhostBtn>
+          <GhostBtn onClick={onClose} darkmode={darkmode}>Close</GhostBtn>
         </div>
       </div>
     </ModalWrap>
   );
 }
 
-function DeleteModal({ project, onClose, onDelete }) {
+function DeleteModal({ project, onClose, onDelete, darkmode }) {
   return (
-    <ModalWrap onClose={onClose} width={400}>
+    <ModalWrap onClose={onClose} width={400} darkmode={darkmode}>
       <div className="p-7">
-        <div className="text-base font-extrabold text-neutral-800 mb-2">Remove Website</div>
-        <div className="text-sm text-neutral-500 mb-6">
-          Remove <span className="font-semibold text-neutral-800">{project.domain}</span>? All collected data will be permanently deleted.
+        <div className={`text-base font-extrabold mb-2 ${darkmode ? "text-neutral-100" : "text-neutral-800"}`}>
+          Remove Website
+        </div>
+        <div className={`text-sm mb-6 ${darkmode ? "text-neutral-400" : "text-neutral-500"}`}>
+          Remove <span className={`font-semibold ${darkmode ? "text-neutral-100" : "text-neutral-800"}`}>{project.domain}</span>? All collected data will be permanently deleted.
         </div>
         <div className="flex gap-2.5 justify-end">
-          <GhostBtn onClick={onClose}>Cancel</GhostBtn>
+          <GhostBtn onClick={onClose} darkmode={darkmode}>Cancel</GhostBtn>
           <DangerBtn onClick={() => { onDelete(project.id); onClose(); }}>
             <FaTrash className="text-[10px]" /> Remove
           </DangerBtn>
@@ -406,7 +419,6 @@ function ProjectsPage({ initialProjects, userEmail, onAddWebsite, showAddModal, 
       console.error("Failed to create project:", err);
     } finally {
       setCreating(false);
-      onAddModalClose();
     }
   }
 
@@ -447,12 +459,15 @@ function ProjectsPage({ initialProjects, userEmail, onAddWebsite, showAddModal, 
         </div>
       )}
 
-      {snippet && <SnippetModal project={snippet} onClose={() => setSnippet(null)} />}
+      {snippet && (
+        <SnippetModal project={snippet} onClose={() => setSnippet(null)} darkmode={darkmode} />
+      )}
       {deleteTarget && (
         <DeleteModal
           project={deleteTarget}
           onClose={() => setDeleteTarget(null)}
           onDelete={(id) => setProjects((ps) => ps.filter((p) => p.id !== id))}
+          darkmode={darkmode}
         />
       )}
       {showAddModal && (
@@ -460,6 +475,7 @@ function ProjectsPage({ initialProjects, userEmail, onAddWebsite, showAddModal, 
           onClose={onAddModalClose}
           onCreate={handleCreate}
           loading={creating}
+          darkmode={darkmode}
         />
       )}
     </div>

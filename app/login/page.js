@@ -84,20 +84,6 @@ export default function LoginPage() {
             <div className="flex-1 h-px bg-gray-100" />
           </div>
 
-          <button className="flex items-center justify-center w-full py-3 px-5 rounded-lg border border-gray-200 text-sm text-gray-500 hover:bg-gray-50 transition-colors">
-            Continue with email
-          </button>
-
-          <p className="text-[11px] text-gray-400 text-center mt-7 leading-relaxed">
-            By continuing, you agree to our{" "}
-            <a href="/terms" className="underline hover:text-gray-600">
-              Terms of Service
-            </a>{" "}
-            and{" "}
-            <a href="/privacy" className="underline hover:text-gray-600">
-              Privacy Policy
-            </a>
-          </p>
         </div>
       </div>
     </div>
